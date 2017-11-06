@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>JQuery Animation Study</title>
+<script type="text/javascript" src="../../../widgets/jquery/jquery-3.2.1.js"></script>
+
+<style type="text/css">
+p.target, div.context {margin:5px 0px;padding:0px;text-align:center;background:#e5eecc;border:solid 1px #c3c3c3;}
+.target {width:100px;float:left;clear:left;}
+.context{width:200px;float:left;}
+.animatePlane {width:500px; height:500px;border:solid 1px #c3c3c3;clear:both;}
+#animateElemnt {width:20px; height:20px;margin:5px;background:#e5eecc;border:solid 1px #c3c3c3;position:relative;}
+</style>
+</head>
+
+<body>
+	<p class="target" id="hide">隐藏/显示</p><div class="context">隐藏/显示内容</div>
+	<p class="target" id="fade">淡出淡出</p><div class="context">淡出淡出内容</div>
+	<p class="target" id="slide">滑动</p><div class="context">滑动内容</div>
+	<p class="target" id="animate">动画</p>
+	<div class="animatePlane"><div id="animateElemnt"></div></div>
+</body>
+
+<script type="text/javascript">
+$(document).ready(function(){
+	makeup();
+});
+
+function makeup () {
+	$('#hide').click(function() {
+		$(this).next().toggle('slow', 'swing');
+	});
+	
+	$('#fade').click(function() {
+		$(this).next().fadeToggle('slow', 'linear');
+	});
+	
+	$('#slide').click(function() {
+		$(this).next().slideToggle('slow', 'swing');
+	});
+	
+	$('#animate').click(function() {
+		$('#animateElemnt').animate({
+			left:'+=50px',
+			height:'+=30px',
+		    width:'+=30px'
+		}, 'slow');
+		$('#animateElemnt').slideToggle('slow', 'swing');
+		$('#animateElemnt').slideToggle('slow', 'swing');
+		$('#animateElemnt').animate({
+			left:'+=200px',
+			top:'+=200px'
+		}, '15000');
+		$('#animateElemnt').animate({
+			left:'0px',
+			top:'0px'
+		}, '15000');
+	});
+}
+
+</script>
+
+</html>

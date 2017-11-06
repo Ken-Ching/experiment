@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+    	http://www.springframework.org/schema/beans/spring-beans.xsd
+    	http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-4.3.xsd
+        http://www.springframework.org/schema/aop 
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/tx 
+        http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+	<context:component-scan base-package="team.kc.experiment.study.spring.quartz"></context:component-scan>
+
+	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<ref bean="simpleTrigger4QuartzDemo" />
+				<ref bean="simpleTrigger4MethodInvokingDemo" />
+				<ref bean="cronTrigger" />
+			</list>
+		</property>
+	</bean>
+
+	<!-- 通过继承QuartzJobBean实现的Job -->
+	<bean name="quartzDemoJob" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+		<!-- jobClass定义任务类，继承QuartzJobBean -->
+		<property name="jobClass" value="team.kc.experiment.study.spring.quartz.QuartzDemoJob" />
+		<!-- jobDataAsMap任务类中需要注入的属性值 -->
+		<property name="jobDataAsMap">
+			<map>
+				<entry key="runTime" value="10" />
+				<entry key="config" value="configValue" />
+			</map>
+		</property>
+	</bean>
+	
+	<!-- 通过MethodInvokingJobDetailFactoryBean将需要执行的任务注入JOB中。 -->
+    <bean id="methodInvokingDemoJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="methodInvokingJobDemo"></property>
+        <!-- 任务类中需要执行的方法 -->
+        <property name="targetMethod" value="run"></property>
+        <!-- 上一次未执行完成的，要等待有再执行。 -->
+        <property name="concurrent" value="false"></property>
+    </bean>
+
+	<!-- SimpleTrigger 每隔指定时间则触发一次 -->
+	<bean id="simpleTrigger4QuartzDemo" class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
+		<property name="jobDetail" ref="quartzDemoJob" />
+		<property name="startDelay" value="0" /><!-- 调度工厂实例化后，经过0秒开始执行调度 -->
+		<property name="repeatInterval" value="10000" /><!-- 每10秒调度一次 -->
+	</bean>
+	<bean id="simpleTrigger4MethodInvokingDemo" class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
+		<property name="jobDetail" ref="methodInvokingDemoJob" />
+		<property name="startDelay" value="0" /><!-- 调度工厂实例化后，经过0秒开始执行调度 -->
+		<property name="repeatInterval" value="15000" /><!-- 每2秒调度一次 -->
+	</bean>
+
+	<!-- CronTrigger 根据表达式指定时间则触发 -->
+	<bean id="cronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="quartzDemoJob" /> 
+		<!-- 每天12:00运行一次 -->
+		<property name="cronExpression" value="0 0 12 * * ?" />
+	</bean>
+</beans>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>JQuery-Media PDF</title>
+<script type="text/javascript" src="../../widgets/jquery/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="../../widgets/jquery-media/jquery.media.js"></script>
+<script type="text/javascript" src="../../widgets/pdf/pdf.js"></script>
+<script type="text/javascript" src="../../widgets/pdf/viewer.js"></script>
+
+<style type="text/css">
+</style>
+
+</head>
+<body>
+	<div id="jqueryMediaPDF">Watch PDF!</div>
+	
+	<embed width="800px" height="800px" id="embedPDF" type="application/pdf"
+		src="spring-data-jpa-reference.pdf"/>
+	
+	<canvas id="pdfCanvas" style="border:1px solid black;"></canvas>
+</body>
+
+<script type="text/javascript">
+$(document).ready(function(){
+	init ();
+	
+	//viewPDFWidthJquery();
+	//viewPDFWidthEmbed();
+	viewPDFWidthPDFJS();
+});
+
+function init () {
+	$('#jqueryMediaPDF').hide();
+	$('#embedPDF').hide();
+	$('#pdfCanvas').hide();
+}
+
+function viewPDFWidthJquery () {
+	$('#jqueryMediaPDF').show();
+	$('#jqueryMediaPDF').media({
+	    width:     800,
+	    height:    800,
+	    autoplay:  false,
+	    src:       'spring-data-jpa-reference.pdf',
+	    caption:   false // supress caption text
+	});
+}
+
+function viewPDFWidthEmbed () {
+	$('#embedPDF').show();
+}
+
+
+function viewPDFWidthPDFJS() {
+
+	$('#pdfCanvas').show();
+	//
+	// If absolute URL from the remote server is provided, configure the CORS
+	// header on that server.
+	//
+	var url = 'spring-data-jpa-reference.pdf';
+	//
+	// Disable workers to avoid yet another cross-origin issue (workers need
+	// the URL of the script to be loaded, and dynamically loading a cross-origin
+	// script does not work).
+	//
+	// PDFJS.disableWorker = true;
+	//
+	// The workerSrc property shall be specified.
+	//
+	PDFJS.workerSrc = '../../widgets/pdf/pdf.worker.js';
+	//
+	// Asynchronous download PDF
+	//
+	PDFJS.getDocument(url).then(function getPdfHelloWorld(pdf) {
+		//
+		// Fetch the first page
+		//
+		pdf.getPage(1).then(function getPageHelloWorld(page) {
+			var scale = 1.5;
+			var viewport = page.getViewport(scale);
+			//
+			// Prepare canvas using PDF page dimensions
+			//
+			var canvas = document.getElementById('pdfCanvas');
+			var context = canvas.getContext('2d');
+			canvas.height = viewport.height;
+			canvas.width = viewport.width;
+			//
+			// Render PDF page into canvas context
+			//
+			var renderContext = {
+				canvasContext : context,
+				viewport : viewport
+			};
+			page.render(renderContext);
+		});
+	});
+}
+</script>
+
+</html>

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Test onready</title>
+<script type="text/javascript" src="../../widgets/jquery/jquery-3.2.1.js"></script>
+</head>
+<body>
+
+</body>
+<script type="text/javascript">
+$(document).ready(function(){
+	testOnRead ();
+});
+</script>
+
+<!-- ready是在dom文档树加载完之后执行一个函数，经测试，所谓的dom文档树应该是包括js的，并且是js加载完后，
+这样就不怕include进来的页面中存在ready方法引用了文档顺序后面引入的js文件中的方法了 -->
+<script type="text/javascript" src="onready.js"></script>
+</html>

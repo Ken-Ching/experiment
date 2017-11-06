@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>html2canvas example</title>
+    <!--[if IE]>
+    <script type="text/javascript" src="html5.js"></script>
+    <script type="text/javascript" src="excanvas.compiled.js"></script>
+	<![endif]-->
+	<script type="text/javascript" src="../../widgets/jquery/jquery-3.2.1.js"></script>
+    <script type="text/javascript" src="html2canvas.js"></script>
+    <script type="text/javascript" src="dom-to-image.min.js"></script>
+</head>
+<body>
+	<table id="table">
+		<tr><td>Name:</td><td>Ken</td></tr>
+		<tr><td>Name:</td><td>Kevin</td></tr>
+	</table>
+    <div id="view" style="background:url(../jquery-qrcode/logo.png) 50% no-repeat; width: 100px; height: 100px;">
+    </div>
+    <input type="button" value="截图" onclick="testToImage();">
+</body>
+
+<script type="text/javascript">
+function takeScreenshot() {
+	alert(1);
+    html2canvas(document.getElementById('view'), {
+        onrendered: function(canvas) {
+            document.body.appendChild(canvas);
+        }
+    });
+}
+
+function testToImage () {
+
+	var node = document.getElementById('table');
+
+	domtoimage.toPng(node)
+	    .then(function (dataUrl) {
+	        var img = new Image();
+	        img.src = dataUrl;
+	        document.body.appendChild(img);
+	    });
+}
+</script>
